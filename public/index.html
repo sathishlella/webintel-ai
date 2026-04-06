@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebIntel AI — Website Competitive Intelligence Agent</title>
+  <meta name="description" content="Drop any URL. Get a full competitive intelligence dossier in 30 seconds. Tech stack, SEO, security, content analysis + AI synthesis.">
+  <meta property="og:title" content="WebIntel AI — Website Intelligence Agent">
+  <meta property="og:description" content="Free open-source competitive intelligence tool. Like BuiltWith + Ahrefs + SecurityHeaders.com combined with AI.">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --white: #ffffff;
+      --bg: #fafafa;
+      --border: #e5e7eb;
+      --text: #111827;
+      --text-secondary: #6b7280;
+      --accent: #1e40af;
+      --accent-light: #dbeafe;
+      --green: #059669;
+      --green-light: #d1fae5;
+      --red: #dc2626;
+      --red-light: #fee2e2;
+      --yellow: #d97706;
+      --yellow-light: #fef3c7;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+      --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03);
+      --shadow-lg: 0 10px 25px rgba(0,0,0,0.06);
+      --radius: 10px;
+      --radius-lg: 14px;
+    }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* --- Header --- */
+    .header {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 20px 0;
+    }
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--text);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 800;
+      font-size: 14px;
+    }
+    .logo-text { font-weight: 700; font-size: 18px; }
+    .logo-tag { font-size: 12px; color: var(--text-secondary); font-weight: 400; }
+    .header-badge {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent);
+      background: var(--accent-light);
+      padding: 4px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+    }
+
+    /* --- Hero --- */
+    .hero {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 60px 24px 40px;
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: 40px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 14px;
+    }
+    .hero p {
+      font-size: 17px;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto 8px;
+    }
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      margin-top: 24px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    .hero-stats span { font-weight: 600; color: var(--text); }
+
+    /* --- Search --- */
+    .search-section {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 0 24px 48px;
+    }
+    .search-box {
+      display: flex;
+      gap: 10px;
+      background: var(--white);
+      padding: 8px;
+      border-radius: var(--radius-lg);
+      border: 2px solid var(--border);
+      box-shadow: var(--shadow-md);
+      transition: border-color 0.2s;
+    }
+    .search-box:focus-within { border-color: var(--accent); }
+    .search-box input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 16px;
+      font-family: inherit;
+      padding: 12px 16px;
+      background: transparent;
+      color: var(--text);
+    }
+    .search-box input::placeholder { color: #9ca3af; }
+    .search-btn {
+      padding: 12px 28px;
+      background: var(--text);
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .search-btn:hover { background: #000; }
+    .search-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .quick-links {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+    .quick-link {
+      font-size: 12px;
+      color: var(--text-secondary);
+      background: var(--white);
+      border: 1px solid var(--border);
+      padding: 5px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+    .quick-link:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* --- Agent Pipeline --- */
+    .pipeline {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px 32px;
+      display: none;
+    }
+    .pipeline.visible { display: block; }
+    .pipeline-header {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+    }
+    .agents-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+    }
+    @media (max-width: 768px) { .agents-grid { grid-template-columns: repeat(2, 1fr); } }
+    .agent-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      text-align: center;
+      transition: all 0.3s;
+    }
+    .agent-card.running { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+    .agent-card.done { border-color: var(--green); background: var(--green-light); }
+    .agent-card.error { border-color: var(--red); background: var(--red-light); }
+    .agent-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: var(--bg);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+      font-size: 16px;
+    }
+    .agent-card.running .agent-icon { background: var(--accent-light); }
+    .agent-card.done .agent-icon { background: rgba(5,150,105,0.15); }
+    .agent-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+    .agent-status {
+      font-size: 11px;
+      color: var(--text-secondary);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .agent-card.running .agent-status { color: var(--accent); }
+    .agent-card.done .agent-status { color: var(--green); }
+
+    /* --- Results --- */
+    .results {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+      display: none;
+    }
+    .results.visible { display: block; }
+
+    .result-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .result-url {
+      font-size: 14px;
+      color: var(--text-secondary);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .result-time {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    /* Score Cards */
+    .score-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 768px) { .score-row { grid-template-columns: repeat(2, 1fr); } }
+    .score-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+    .score-label { font-size: 12px; color: var(--text-secondary); font-weight: 500; margin-bottom: 6px; }
+    .score-value { font-size: 32px; font-weight: 800; letter-spacing: -0.02em; }
+    .score-sub { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+    .grade-a { color: var(--green); }
+    .grade-b { color: var(--accent); }
+    .grade-c { color: var(--yellow); }
+    .grade-d, .grade-f { color: var(--red); }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+    }
+    .tab {
+      padding: 10px 18px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-family: inherit;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .tab:hover { color: var(--text); }
+    .tab.active { color: var(--text); border-bottom-color: var(--text); font-weight: 600; }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Content panels */
+    .panel {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 16px;
+    }
+    .panel h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Tech Stack Grid */
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 10px;
+    }
+    .tech-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      background: var(--bg);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    .tech-name { font-size: 14px; font-weight: 600; }
+    .tech-category { font-size: 11px; color: var(--text-secondary); }
+
+    /* Issue List */
+    .issue-list { display: flex; flex-direction: column; gap: 8px; }
+    .issue-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+    .issue-item.critical { background: var(--red-light); }
+    .issue-item.warning { background: var(--yellow-light); }
+    .issue-item.minor { background: var(--bg); }
+    .issue-item.pass { background: var(--green-light); }
+    .issue-badge {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 4px;
+      white-space: nowrap;
+      letter-spacing: 0.5px;
+    }
+    .issue-item.critical .issue-badge { background: var(--red); color: white; }
+    .issue-item.warning .issue-badge { background: var(--yellow); color: white; }
+    .issue-item.minor .issue-badge { background: #9ca3af; color: white; }
+    .issue-item.pass .issue-badge { background: var(--green); color: white; }
+
+    /* Security headers */
+    .security-grid { display: flex; flex-direction: column; gap: 8px; }
+    .security-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      background: var(--bg);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    .security-item.present { border-left: 3px solid var(--green); }
+    .security-item.missing { border-left: 3px solid var(--red); }
+    .security-name { font-size: 13px; font-weight: 600; }
+    .security-desc { font-size: 11px; color: var(--text-secondary); }
+
+    /* AI Dossier */
+    .ai-dossier {
+      font-size: 15px;
+      line-height: 1.75;
+    }
+    .ai-dossier h1, .ai-dossier h2, .ai-dossier h3 {
+      margin-top: 24px;
+      margin-bottom: 8px;
+    }
+    .ai-dossier h2 { font-size: 18px; }
+    .ai-dossier h3 { font-size: 16px; }
+    .ai-dossier strong { font-weight: 700; }
+    .ai-dossier ul, .ai-dossier ol { padding-left: 20px; margin: 8px 0; }
+    .ai-dossier li { margin-bottom: 4px; }
+    .ai-dossier p { margin-bottom: 12px; }
+
+    /* Content tab */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 768px) { .content-grid { grid-template-columns: 1fr; } }
+    .content-section { margin-bottom: 12px; }
+    .content-label { font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+    .cta-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 12px;
+      margin: 2px;
+    }
+    .cta-type {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .social-chip {
+      display: inline-flex;
+      padding: 4px 10px;
+      background: var(--text);
+      color: white;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      margin: 2px;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 40px 24px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      border-top: 1px solid var(--border);
+    }
+    .footer a { color: var(--accent); text-decoration: none; }
+
+    /* Loading spinner */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      display: inline-block;
+    }
+
+    /* Error */
+    .error-box {
+      background: var(--red-light);
+      border: 1px solid var(--red);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      font-size: 14px;
+      color: var(--red);
+      margin-bottom: 20px;
+      display: none;
+    }
+    .error-box.visible { display: block; }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .hero h1 { font-size: 28px; }
+      .hero p { font-size: 15px; }
+      .search-box { flex-direction: column; }
+      .search-btn { width: 100%; }
+      .score-row { grid-template-columns: 1fr 1fr; }
+      .agents-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <div class="logo-icon">WI</div>
+        <div>
+          <div class="logo-text">WebIntel AI</div>
+          <div class="logo-tag">Competitive Intelligence Agent</div>
+        </div>
+      </div>
+      <div class="header-badge">DAY 5 OF 100</div>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero">
+    <h1>Know everything about<br>any website in 30 seconds</h1>
+    <p>Drop a URL. Five AI agents dissect its tech stack, SEO health, security posture, content strategy, and competitive positioning.</p>
+    <div class="hero-stats">
+      <div><span>5</span> sub-agents</div>
+      <div><span>100+</span> tech signatures</div>
+      <div><span>75+</span> audit checks</div>
+      <div><span>Free</span> & open source</div>
+    </div>
+  </div>
+
+  <!-- Search -->
+  <div class="search-section">
+    <div class="search-box">
+      <input type="text" id="urlInput" placeholder="Enter any URL — e.g. stripe.com" autocomplete="off" spellcheck="false">
+      <button class="search-btn" id="analyzeBtn" onclick="analyze()">Analyze</button>
+    </div>
+    <div class="quick-links">
+      <button class="quick-link" onclick="setUrl('stripe.com')">stripe.com</button>
+      <button class="quick-link" onclick="setUrl('vercel.com')">vercel.com</button>
+      <button class="quick-link" onclick="setUrl('linear.app')">linear.app</button>
+      <button class="quick-link" onclick="setUrl('notion.so')">notion.so</button>
+      <button class="quick-link" onclick="setUrl('anthropic.com')">anthropic.com</button>
+    </div>
+  </div>
+
+  <!-- Error -->
+  <div class="error-box" id="errorBox" style="max-width:1100px;margin:0 auto 20px;padding-left:24px;padding-right:24px;"></div>
+
+  <!-- Agent Pipeline -->
+  <div class="pipeline" id="pipeline">
+    <div class="pipeline-header">Agent Pipeline</div>
+    <div class="agents-grid">
+      <div class="agent-card" id="agent-scraper">
+        <div class="agent-icon">1</div>
+        <div class="agent-name">Scraper</div>
+        <div class="agent-status">Waiting</div>
+      </div>
+      <div class="agent-card" id="agent-tech">
+        <div class="agent-icon">2</div>
+        <div class="agent-name">TechDetector</div>
+        <div class="agent-status">Waiting</div>
+      </div>
+      <div class="agent-card" id="agent-seo">
+        <div class="agent-icon">3</div>
+        <div class="agent-name">SEO Auditor</div>
+        <div class="agent-status">Waiting</div>
+      </div>
+      <div class="agent-card" id="agent-security">
+        <div class="agent-icon">4</div>
+        <div class="agent-name">Security Auditor</div>
+        <div class="agent-status">Waiting</div>
+      </div>
+      <div class="agent-card" id="agent-synth">
+        <div class="agent-icon">5</div>
+        <div class="agent-name">AI Synthesizer</div>
+        <div class="agent-status">Waiting</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="results" id="results">
+    <div class="result-header">
+      <div class="result-url" id="resultUrl"></div>
+      <div class="result-time" id="resultTime"></div>
+    </div>
+
+    <!-- Score Cards -->
+    <div class="score-row" id="scoreRow"></div>
+
+    <!-- Tabs -->
+    <div class="tabs" id="tabs">
+      <button class="tab active" onclick="switchTab('dossier')">AI Dossier</button>
+      <button class="tab" onclick="switchTab('tech')">Tech Stack</button>
+      <button class="tab" onclick="switchTab('seo')">SEO Audit</button>
+      <button class="tab" onclick="switchTab('security')">Security</button>
+      <button class="tab" onclick="switchTab('content')">Content</button>
+    </div>
+
+    <div class="tab-content active" id="tab-dossier">
+      <div class="panel">
+        <div class="ai-dossier" id="aiDossier"></div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="tab-tech">
+      <div class="panel">
+        <h3>Detected Technologies</h3>
+        <div class="tech-grid" id="techGrid"></div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="tab-seo">
+      <div class="panel">
+        <h3>SEO Issues</h3>
+        <div class="issue-list" id="seoIssues"></div>
+      </div>
+      <div class="panel">
+        <h3>SEO Passes</h3>
+        <div class="issue-list" id="seoPasses"></div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="tab-security">
+      <div class="panel">
+        <h3>Security Headers</h3>
+        <div class="security-grid" id="securityHeaders"></div>
+      </div>
+      <div class="panel" id="securityWarningsPanel" style="display:none">
+        <h3>Warnings</h3>
+        <div class="issue-list" id="securityWarnings"></div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="tab-content">
+      <div class="content-grid" id="contentGrid"></div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    Built by <strong>Sathish Lella</strong> — Day 5 of <a href="https://github.com/sathishlella">100 Days, 100 AI Agents</a>
+    <br>Open source. Powered by Groq + Llama 3.3
+  </div>
+
+  <script>
+    function setUrl(url) {
+      document.getElementById('urlInput').value = url;
+      analyze();
+    }
+
+    function switchTab(tab) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.querySelector(`[onclick="switchTab('${tab}')"]`).classList.add('active');
+      document.getElementById('tab-' + tab).classList.add('active');
+    }
+
+    function updateAgent(id, status, text) {
+      const card = document.getElementById('agent-' + id);
+      card.className = 'agent-card ' + status;
+      card.querySelector('.agent-status').innerHTML = text;
+    }
+
+    function gradeClass(grade) {
+      if (!grade) return '';
+      const g = grade.replace('+','').toLowerCase();
+      if (g === 'a') return 'grade-a';
+      if (g === 'b') return 'grade-b';
+      if (g === 'c') return 'grade-c';
+      return 'grade-d';
+    }
+
+    function simpleMarkdown(text) {
+      return text
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+        .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+        .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+        .replace(/^\- (.+)$/gm, '<li>$1</li>')
+        .replace(/^\d+\. (.+)$/gm, '<li>$1</li>')
+        .replace(/(<li>[\s\S]*?<\/li>)/g, '<ul>$1</ul>')
+        .replace(/<\/ul>\s*<ul>/g, '')
+        .replace(/\n\n/g, '</p><p>')
+        .replace(/\n/g, '<br>');
+    }
+
+    async function analyze() {
+      const url = document.getElementById('urlInput').value.trim();
+      if (!url) return;
+
+      const btn = document.getElementById('analyzeBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> Analyzing...';
+
+      // Show pipeline, hide results
+      document.getElementById('pipeline').classList.add('visible');
+      document.getElementById('results').classList.remove('visible');
+      document.getElementById('errorBox').classList.remove('visible');
+
+      // Reset agents
+      ['scraper','tech','seo','security','synth'].forEach(a => updateAgent(a, '', 'Waiting'));
+
+      // Simulate pipeline progress
+      updateAgent('scraper', 'running', '<span class="spinner"></span> Fetching...');
+
+      try {
+        const response = await fetch('/api/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url })
+        });
+
+        // Simulate agent progression for visual feedback
+        updateAgent('scraper', 'done', 'Complete');
+        updateAgent('tech', 'running', '<span class="spinner"></span> Scanning...');
+        await sleep(300);
+        updateAgent('tech', 'done', 'Complete');
+        updateAgent('seo', 'running', '<span class="spinner"></span> Auditing...');
+        await sleep(200);
+        updateAgent('seo', 'done', 'Complete');
+        updateAgent('security', 'running', '<span class="spinner"></span> Checking...');
+        await sleep(200);
+        updateAgent('security', 'done', 'Complete');
+        updateAgent('synth', 'running', '<span class="spinner"></span> Synthesizing...');
+        await sleep(200);
+        updateAgent('synth', 'done', 'Complete');
+
+        const data = await response.json();
+
+        if (!data.success) {
+          throw new Error(data.error || 'Analysis failed');
+        }
+
+        renderResults(data);
+      } catch (error) {
+        const errBox = document.getElementById('errorBox');
+        errBox.textContent = error.message || 'Failed to analyze URL. Make sure it is accessible.';
+        errBox.classList.add('visible');
+        ['scraper','tech','seo','security','synth'].forEach(a => {
+          const card = document.getElementById('agent-' + a);
+          if (card.classList.contains('running')) updateAgent(a, 'error', 'Failed');
+        });
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Analyze';
+      }
+    }
+
+    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    function renderResults(data) {
+      const d = data.data;
+
+      // URL + Time
+      document.getElementById('resultUrl').textContent = data.url;
+      document.getElementById('resultTime').textContent = `Analyzed in ${(data.totalTime / 1000).toFixed(1)}s`;
+
+      // Score Cards
+      document.getElementById('scoreRow').innerHTML = `
+        <div class="score-card">
+          <div class="score-label">Technologies</div>
+          <div class="score-value">${d.techStack.length}</div>
+          <div class="score-sub">detected</div>
+        </div>
+        <div class="score-card">
+          <div class="score-label">SEO Score</div>
+          <div class="score-value ${gradeClass(d.seo.grade)}">${d.seo.score}%</div>
+          <div class="score-sub">Grade ${d.seo.grade}</div>
+        </div>
+        <div class="score-card">
+          <div class="score-label">Security Score</div>
+          <div class="score-value ${gradeClass(d.security.grade)}">${d.security.score}%</div>
+          <div class="score-sub">Grade ${d.security.grade}</div>
+        </div>
+        <div class="score-card">
+          <div class="score-label">Analysis Time</div>
+          <div class="score-value">${(data.totalTime / 1000).toFixed(1)}s</div>
+          <div class="score-sub">5 agents</div>
+        </div>
+      `;
+
+      // AI Dossier
+      document.getElementById('aiDossier').innerHTML = simpleMarkdown(d.aiAnalysis || 'No analysis available.');
+
+      // Tech Stack
+      const techHtml = d.techStack.length > 0
+        ? d.techStack.map(t => `
+          <div class="tech-item">
+            <div>
+              <div class="tech-name">${t.name}</div>
+              <div class="tech-category">${t.category}</div>
+            </div>
+          </div>
+        `).join('')
+        : '<p style="color:var(--text-secondary);font-size:14px;">No technologies detected from HTML signatures. The site may use server-side rendering or obfuscation.</p>';
+      document.getElementById('techGrid').innerHTML = techHtml;
+
+      // SEO Issues
+      document.getElementById('seoIssues').innerHTML = d.seo.issues.map(i => `
+        <div class="issue-item ${i.severity}">
+          <span class="issue-badge">${i.severity}</span>
+          <span>${i.message}</span>
+        </div>
+      `).join('') || '<p style="color:var(--green);font-size:14px;">No issues found!</p>';
+
+      document.getElementById('seoPasses').innerHTML = d.seo.passes.map(p => `
+        <div class="issue-item pass">
+          <span class="issue-badge">pass</span>
+          <span>${p}</span>
+        </div>
+      `).join('');
+
+      // Security Headers
+      const secPresent = d.security.present.map(h => `
+        <div class="security-item present">
+          <div>
+            <div class="security-name">${h.name}</div>
+            <div class="security-desc">${h.description}</div>
+          </div>
+          <span style="color:var(--green);font-size:20px;font-weight:700;">&#10003;</span>
+        </div>
+      `).join('');
+      const secMissing = d.security.missing.map(h => `
+        <div class="security-item missing">
+          <div>
+            <div class="security-name">${h.name}</div>
+            <div class="security-desc">${h.recommendation || h.description}</div>
+          </div>
+          <span style="color:var(--red);font-size:20px;font-weight:700;">&#10007;</span>
+        </div>
+      `).join('');
+      document.getElementById('securityHeaders').innerHTML = secPresent + secMissing;
+
+      if (d.security.warnings.length > 0) {
+        document.getElementById('securityWarningsPanel').style.display = 'block';
+        document.getElementById('securityWarnings').innerHTML = d.security.warnings.map(w => `
+          <div class="issue-item warning">
+            <span class="issue-badge">warn</span>
+            <span><strong>${w.name}:</strong> ${w.message}</span>
+          </div>
+        `).join('');
+      }
+
+      // Content Tab
+      const c = d.content;
+      document.getElementById('contentGrid').innerHTML = `
+        <div class="panel">
+          <h3>Messaging & CTAs</h3>
+          ${c.messaging.heroText ? `<div class="content-section"><div class="content-label">Hero Text</div><p style="font-size:14px;">${c.messaging.heroText.substring(0, 300)}</p></div>` : ''}
+          <div class="content-section">
+            <div class="content-label">Call-to-Actions (${c.ctas.length})</div>
+            <div>${c.ctas.map(cta => `<span class="cta-chip">${cta.text} <span class="cta-type">${cta.type}</span></span>`).join('') || 'None found'}</div>
+          </div>
+          <div class="content-section">
+            <div class="content-label">Social Presence</div>
+            <div>${c.socialLinks.map(s => `<span class="social-chip">${s.platform}</span>`).join('') || 'None found'}</div>
+          </div>
+        </div>
+        <div class="panel">
+          <h3>Content Metrics</h3>
+          <div class="content-section">
+            <div class="content-label">Page Stats</div>
+            <p style="font-size:14px;line-height:2;">
+              Word count: <strong>${c.contentMetrics.wordCount || 'N/A'}</strong><br>
+              Read time: <strong>${c.contentMetrics.estimatedReadTime || 'N/A'}</strong><br>
+              Images: <strong>${c.contentMetrics.imageCount || 0}</strong><br>
+              Videos: <strong>${c.contentMetrics.videoCount || 0}</strong>
+            </p>
+          </div>
+          <div class="content-section">
+            <div class="content-label">Pricing Signals</div>
+            <p style="font-size:14px;">
+              Pricing page: <strong>${c.pricing?.hasPricingPage ? 'Yes' : 'No'}</strong><br>
+              Free option: <strong>${c.pricing?.hasFreeOption ? 'Yes' : 'No'}</strong><br>
+              ${c.pricing?.pricesMentioned?.length ? 'Prices found: <strong>' + c.pricing.pricesMentioned.join(', ') + '</strong>' : 'No prices detected'}
+            </p>
+          </div>
+          <div class="content-section">
+            <div class="content-label">Features</div>
+            <p style="font-size:14px;">
+              ${c.contentMetrics.hasTestimonials ? '&#10003; Testimonials' : '&#10007; No testimonials'}<br>
+              ${c.contentMetrics.hasFAQ ? '&#10003; FAQ section' : '&#10007; No FAQ'}<br>
+              ${c.contentMetrics.hasBlog ? '&#10003; Blog/Articles' : '&#10007; No blog'}
+            </p>
+          </div>
+          <div class="content-section">
+            <div class="content-label">Forms (${c.forms.length})</div>
+            <div>${c.forms.map(f => `<span class="cta-chip">${f.type} (${f.inputs} fields)</span>`).join('') || 'No forms found'}</div>
+          </div>
+        </div>
+      `;
+
+      // Show results
+      document.getElementById('results').classList.add('visible');
+      switchTab('dossier');
+    }
+
+    // Enter key handler
+    document.getElementById('urlInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') analyze();
+    });
+  </script>
+</body>
+</html>

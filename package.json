@@ -1,0 +1,21 @@
+{
+  "name": "webintel-ai",
+  "version": "1.0.0",
+  "description": "AI-powered Website Competitive Intelligence Agent — tech stack detection, SEO audit, security analysis, and AI synthesis in one tool",
+  "main": "api/analyze.js",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod",
+    "test": "node test.js"
+  },
+  "keywords": ["ai", "web-intelligence", "tech-detection", "seo-audit", "competitive-intelligence", "groq"],
+  "author": "Sathish Lella",
+  "license": "MIT",
+  "dependencies": {
+    "cheerio": "^1.0.0",
+    "groq-sdk": "^0.9.1"
+  },
+  "devDependencies": {
+    "vercel": "^39.0.0"
+  }
+}
