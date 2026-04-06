@@ -716,6 +716,11 @@
         await sleep(200);
         updateAgent('synth', 'done', 'Complete');
 
+        if (!response.ok) {
+          const text = await response.text();
+          throw new Error(`Server error (${response.status}): ${text.substring(0, 200)}`);
+        }
+
         const data = await response.json();
 
         if (!data.success) {
