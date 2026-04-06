@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "name": "webintel-ai",
   "version": "1.0.0",
   "description": "AI-powered Website Competitive Intelligence Agent — tech stack detection, SEO audit, security analysis, and AI synthesis in one tool",
