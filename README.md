@@ -142,4 +142,4 @@ MIT
 
 ---
 
-Built with Groq + Llama 3.3 70B | Open Source | [github.com/sathishlella](https://github.com/sathishlella)
+Open Source | [github.com/sathishlella](https://github.com/sathishlella)
